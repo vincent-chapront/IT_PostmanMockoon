@@ -1,0 +1,412 @@
+{
+	"info": {
+		"_postman_id": "eccab034-5646-4589-9edb-1b4979dc243f",
+		"name": "IT-Postman - Full",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books - Must be empty at start",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must be empty at start\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData.length).to.equal(0);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"    pm.environment.unset(\"counter\");\r",
+							"    pm.environment.unset(\"bookId\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Missing Title - 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must have a title\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"\r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"\",\r\n  \"author\":\"Author\",\r\n  \"publisher\":\"publisher\",\r\n  \"year\":2019\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Missing Author - 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must have an author\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Title\",\r\n  \"author\":\"\",\r\n  \"publisher\":\"publisher\",\r\n  \"year\":2019\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Missing Publisher - 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must have a publisher\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Title\",\r\n  \"author\":\"Author\",\r\n  \"publisher\":\"\",\r\n  \"year\":2019\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Valid - 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Book is created\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(201);\r",
+							"\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData.author).to.equal(\"Author\");\r",
+							"    pm.expect(jsonData.publisher).to.equal(\"Publisher\");\r",
+							"    pm.expect(jsonData.title).to.equal(\"Title\");\r",
+							"\r",
+							"\r",
+							"    pm.environment.set(\"bookId\", jsonData.id);\r",
+							"\r",
+							"\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Title\",\r\n  \"author\":\"Author\",\r\n  \"publisher\":\"Publisher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Must have 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must be empty at start\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData.length).to.equal(1);\r",
+							"    pm.environment.set(\"bookId\", jsonData[0].id);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books/:bookId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get details \", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData.author).to.equal(\"Author\");\r",
+							"    pm.expect(jsonData.publisher).to.equal(\"Publisher\");\r",
+							"    pm.expect(jsonData.title).to.equal(\"Title\");\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Books/{{bookId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books",
+						"{{bookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - GenericAdd",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (!pm.environment.has(\"counter\")) {\r",
+							"    pm.environment.set(\"counter\", 1);\r",
+							" }\r",
+							"\r",
+							"let currentCount = parseInt(pm.environment.get(\"counter\")); \r",
+							"let numberOfLoops = 5;\r",
+							"\r",
+							"if (currentCount < numberOfLoops) {\r",
+							"    postman.setNextRequest(\"Books - GenericAdd\");\r",
+							"}\r",
+							"else{\r",
+							"    postman.setNextRequest(\"Books - Check after batch\");\r",
+							"}\r",
+							"\r",
+							"// increment the counter and re-save the value as an environment variable\r",
+							"currentCount++;\r",
+							"pm.environment.set(\"counter\", currentCount);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Title\",\r\n  \"author\":\"Author\",\r\n  \"publisher\":\"Publisher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books - Check after batch",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Books must be empty at start\", function () {\r",
+							"    postman.setNextRequest(null);\r",
+							"    \r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData.length).to.equal(6);\r",
+							"\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Books",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
